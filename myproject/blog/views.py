@@ -1,5 +1,8 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import UserCreationForm
+from django.urls import reverse_lazy
 from .forms import PostForm
 from .models import Post
 
@@ -22,6 +25,7 @@ def post_detail(request, slug):
     return render(request, 'blog/post_detail.html', {'post': post})
 
 
+@login_required
 def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
@@ -31,3 +35,14 @@ def post_new(request):
     else:
         form = PostForm()
     return render(request, 'blog/post_edit.html', {'form': form})
+
+
+def sign_up(request):
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login')
+    else:
+        form = UserCreationForm()
+    return render(request, 'registration/signup.html', {'form': form})
