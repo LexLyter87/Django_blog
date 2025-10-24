@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }} - {{ block.super }}{% endblock %}
+
+
+{% block content %}
+    <article>
+        <h1>{{ post.title }}</h1>
+        <p><small>Опубликовано: {{ post.created_date|date:"d.m.Y" }}</small></p>
+        <div>
+            {{ post.body|linebreaks }}
+        </div>
+    </article>
+    <hr>
+    <a href="{% url 'post_list' %}">← Назад ко всем постам</a>
+{% endblock %}
