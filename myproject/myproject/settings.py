@@ -28,11 +28,13 @@ SECRET_KEY = os.environ.get('SECRET_KEY', default='your-insecure-default-key')
 DEBUG = 'RENDER' not in os.environ
 
 ALLOWED_HOSTS = []
-ALLOWED_HOSTS = ['django-blog-n6j1.onrender.com']
 
 RENDER_EXTERNAL_HOSTNAME = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+else:
+    ALLOWED_HOSTS.append('127.0.0.1')
+    ALLOWED_HOSTS.append('localhost')
 
 # Application definition
 
