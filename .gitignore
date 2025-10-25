@@ -1,13 +1,25 @@
+
 venv/
+.venv/
+
 
 __pycache__/
 *.pyc
 
+
 db.sqlite3
+
 
 .env
 
-staticfiles/
+
+local_settings.py
+
+
+.idea/
+.vscode/
+
+
+/media/
 
 *.log
-.DS_Store
