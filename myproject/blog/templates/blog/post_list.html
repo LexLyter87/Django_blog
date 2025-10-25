@@ -10,7 +10,10 @@
                     {{ post.title }}
                 </a>
             </h3>
-            <small>Опубликовано: {{ post.created_date|date:"d.m.Y" }}</small>
+            <small>
+                Автор: <strong>{{ post.author.username }}</strong> |
+                Опубликовано: {{ post.created_date|date:"d.m.Y" }}
+            </small>
         </article>
     {% endfor %}
 

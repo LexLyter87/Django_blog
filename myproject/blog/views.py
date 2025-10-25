@@ -30,7 +30,9 @@ def post_new(request):
     if request.method == "POST":
         form = PostForm(request.POST)
         if form.is_valid():
-            post = form.save()
+            post = form.save(commit=False)
+            post.author = request.user
+            post.save()
             return redirect('post_detail', slug=post.slug)
     else:
         form = PostForm()
@@ -46,3 +48,27 @@ def sign_up(request):
     else:
         form = UserCreationForm()
     return render(request, 'registration/signup.html', {'form': form})
+
+
+@login_required
+def post_edit(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.user != post.author:
+        return redirect('post_detail', slug=post.slug)
+    if request.method == 'POST':
+        form = PostForm(request.POST, instance=post)
+        if form.is_valid():
+            form.save()
+            return redirect('post_detail', slug=post.slug)
+    else:
+        form = PostForm(instance=post)
+    return render(request, 'blog/post_edit.html', {'form': form, 'post': post})
+
+
+@login_required
+def post_delete(request, slug):
+    post = get_object_or_404(Post, slug=slug)
+    if request.user == post.author:
+        post.delete()
+    return redirect('post_list')
+

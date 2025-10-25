@@ -4,13 +4,35 @@
 
 
 {% block content %}
+
     <article>
         <h1>{{ post.title }}</h1>
-        <p><small>Опубликовано: {{ post.created_date|date:"d.m.Y" }}</small></p>
+        <p>
+            <small>
+                Автор: {{ post.author.username }}
+                Опубликовано: {{ post.created_date|date:"d.m.Y" }}
+            </small>
+        </p>
         <div>
             {{ post.body|linebreaks }}
         </div>
     </article>
+    
+    {% if user.is_authenticated and user == post.author %}
+    <hr>
+    <div style="display: flex; gap: 10px;">
+        <a href="{% url 'post_edit' slug=post.slug %}" class="btn btn--secondary" style="color: white; background-color: #007bff; padding: 10px; text-decoration: none; border-radius: 5px;">
+            Редактировать
+        </a>
+        <a href="{% url 'post_delete' slug=post.slug %}"
+            class="btn btn--outline"
+            style="color: red; border: 1px solid red; padding: 10px; text-decoration: none; border-radius: 5px;"
+            onclick="return confirm('Вы уверены, что хотите удалить этот пост?');">
+            Удалить
+        </a>
+    </div>
+    {% endif %}
+
     <hr>
     <a href="{% url 'post_list' %}">← Назад ко всем постам</a>
 {% endblock %}
