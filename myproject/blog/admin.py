@@ -1,5 +1,11 @@
 from django.contrib import admin
-from .models import Post
+from .models import Post, Comment
 
 
 admin.site.register(Post)
+
+@admin.register(Comment)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('author', 'post', 'created_date', 'body')
+    list_filter = ('created_date',)
+    search_fields = ('author__username', 'body',)

@@ -31,3 +31,16 @@ class Post(models.Model):
         ordering = ['-created_date']
         verbose_name = "Пост"
         verbose_name_plural = "Посты"
+
+
+class Comment(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comments')
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    body = models.TextField()
+    created_date = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_date']
+
+    def __str__(self):
+        return f'Комментарий от {self.author} к посту "{self.post.title}"'

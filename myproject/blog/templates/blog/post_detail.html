@@ -34,5 +34,35 @@
     {% endif %}
 
     <hr>
+    <h2>Комментарии ({{ comments.count }})</h2>
+
+    {% for comment in comments %}
+        <div class='comment' style="margin-bottom: 15px; padding-bottom: 10px; border-bottom: 1px solid #eee;">
+            <p>
+                <strong>{{ comment.author.username }}</strong>
+                <span style="color: #777; font-size: 0.9em;">
+                    - {{ comment.created_date|date:"d.m.Y H:i" }}
+                </span>
+            </p>
+            <p>{{ comment.body|linebreaks }}</p>
+        </div>
+    {% empty %}
+        <p>Комментариев пока нет. Будьте первым!</p>
+    {% endfor %}
+
+    <hr>
+
+    {% if user.is_authenticated %}
+        <h3>Оставить комментарий</h3>
+        <form method="post">
+            {% csrf_token %}
+            {{ comment_form.as_p }}
+            <button type="submit">Отправить</button>
+        </form>
+    {% else %}
+        <p>ожалуйста, <a href="{% url 'login' %}?next={{request.path }}">войдите</a>, чтобы оставить комментарий.</p>
+    {% endif %}
+
+    <hr>
     <a href="{% url 'post_list' %}">← Назад ко всем постам</a>
 {% endblock %}
