@@ -1,14 +1,24 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-{% block title %}Вход{% endblock %}
+{% block title %}Вход - {{ block.super }}{% endblock %}
 
 {% block content %}
-    <h2>Вход</h2>
-    <p>Пожалуйста, используйте следующую форму для входа:</p>
-    <form method="post">
-        {{form.as_p }}
-        {% csrf_token %}
-        <button type="submit">Войти</button>
-    </form>
-    <p><a href="{% url 'signup' %}">У вас нет аккаунта? Зарегистрируйтесь!</a></p>
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h2 class="card-title text-center">Вход</h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Войти</button>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <small>У вас нет аккаунта? <a href="{% url 'signup' %}">Зарегистрируйтесь!</a></small>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,38 +1,61 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+
+{% block title %}Список постов - {{ block.super }}{% endblock %}
 
 {% block content %}
-    <h2>Список всех постов</h2>
-    <hr>
+    <h1 class="mb-4">Последние посты</h1>
+
     {% for post in posts %}
-        <article>
-            <h3>
-                <a href="{% url 'post_detail' slug=post.slug %}">
-                    {{ post.title }}
-                </a>
-            </h3>
-            <small>
-                Автор: <strong>{{ post.author.username }}</strong> |
-                Опубликовано: {{ post.created_date|date:"d.m.Y" }}
-            </small>
-        </article>
+        <div class="card mb-4">
+            <div class="card-body">
+                <h2 class="card-title h3"><a href="{% url 'post_detail' slug=post.slug %}" class="text-dark text-decoration-none">{{ post.title }}</a></h2>
+                <p class="card-subtitle text-muted mb-2">
+                    Автор: {{ post.author.username }} | Опубликовано: {{ post.created_date|date:"d.m.Y" }}
+                </p>
+                <p class="card-text">{{ post.body|truncatewords_html:70|linebreaks }}</p>
+                <a href="{% url 'post_detail' slug=post.slug %}" class="btn btn-primary">Читать далее &rarr;</a>
+            </div>
+        </div>
+    {% empty %}
+        <div class="alert alert-info" role="alert">
+            Пока нет ни одного поста. <a href="{% url 'post_new' %}" class="alert-link">Создайте первый!</a>
+        </div>
     {% endfor %}
 
-    <div class="pagination">
-        <span class="step-links">
+    {% if posts.has_other_pages %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
             {% if posts.has_previous %}
-                <a href="?page=1">&laquo; первая</a>
-                <a href="?page={{ posts.previous_page_number}}">предыдущая</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.previous_page_number }}">Назад</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Назад</span>
+                </li>
             {% endif %}
 
-            <span class="current">
-                Страница {{ posts.number }} из {{ posts.paginator.num_pages }}.
-            </span>
+            {% for i in posts.paginator.page_range %}
+                {% if posts.number == i %}
+                    <li class="page-item active" aria-current="page">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% else %}
+                    <li class="page-item"><a class="page-link" href="?page={{ i }}">{{ i }}</a></li>
+                {% endif %}
+            {% endfor %}
 
             {% if posts.has_next %}
-                <a href="?page={{ posts.nex_page_number }}">следующая</a>
-                <a href="?page={{ posts.paginator.num_pages }}">последняя &raquo;</a>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ posts.next_page_number }}">Вперед</a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <span class="page-link">Вперед</span>
+                </li>
             {% endif %}
-        </span>
-    </div>
+        </ul>
+    </nav>
+    {% endif %}
 
 {% endblock %}

@@ -1,15 +1,30 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
 
-{% block title %}Добавить новый пост{% endblock %}
-
+{% block title %}{% if form.instance.pk %}Редактировать пост{% else %}Новый пост{% endif %} - {{ block.super }}{% endblock %}
 
 {% block content %}
-    <h2>Новый пост</h2>
-    <form method="POST">
+    <h2>{% if form.instance.pk %}Редактировать пост{% else %}Создать новый пост{% endif %}</h2>
+    
+    <form method="post" class="mt-4">
         {% csrf_token %}
-
-        {{ form.as_p }}
-
-        <button type="submit">Сохранить</button>
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a href="{{ post.get_absolute_url|default:'/' }}" class="btn btn-secondary">Отмена</a>
     </form>
+
+    
+    {% if form.instance.pk %}
+    <hr>
+    <div class="mt-3">
+        <h5>Опасная зона</h5>
+        <p>Удаление поста - необратимое действие.</p>
+        <form action="{% url 'post_delete' slug=post.slug %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger" onclick="return confirm('Вы уверены, что хотите удалить этот пост?');">
+                Удалить пост
+            </button>
+        </form>
+    </div>
+    {% endif %}
 {% endblock %}
