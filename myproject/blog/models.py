@@ -15,6 +15,7 @@ class Post(models.Model):
     slug = models.SlugField(max_length=250, unique=True, blank=True)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='posts')
     body = models.TextField(verbose_name="Текст поста")
+    image = models.ImageField(upload_to='post_images/', blank=True, null=True)
     created_date = models.DateTimeField(auto_now_add=True, verbose_name="Дата создания")
 
     def __str__(self):

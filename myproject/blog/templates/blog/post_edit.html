@@ -6,7 +6,7 @@
 {% block content %}
     <h2>{% if form.instance.pk %}Редактировать пост{% else %}Создать новый пост{% endif %}</h2>
     
-    <form method="post" class="mt-4">
+    <form method="post" enctype="multipart/form-data" class="mt-4">
         {% csrf_token %}
         {{ form|crispy }}
         <button type="submit" class="btn btn-primary">Сохранить</button>

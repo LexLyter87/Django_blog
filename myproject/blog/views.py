@@ -46,7 +46,7 @@ def post_detail(request, slug):
 @login_required
 def post_new(request):
     if request.method == "POST":
-        form = PostForm(request.POST)
+        form = PostForm(request.POST, request.FILES)
         if form.is_valid():
             post = form.save(commit=False)
             post.author = request.user
@@ -74,7 +74,7 @@ def post_edit(request, slug):
     if request.user != post.author:
         return redirect('post_detail', slug=post.slug)
     if request.method == 'POST':
-        form = PostForm(request.POST, instance=post)
+        form = PostForm(request.POST, request.FILES ,instance=post)
         if form.is_valid():
             form.save()
             return redirect('post_detail', slug=post.slug)
